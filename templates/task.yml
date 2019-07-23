@@ -7,7 +7,7 @@ Parameters:
     Type: String
 
 Resources:
-  
+
   LogsFargate:
     Type: "AWS::Logs::LogGroup"
     Properties:
@@ -27,7 +27,7 @@ Resources:
       ExecutionRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/ECSTaskExecution
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}
-          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/indietools:${Version}
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/load-tester:${Version}
           # Environment:
           #   - Name: ENVIRON
           #     Value: !Sub ${Environment}

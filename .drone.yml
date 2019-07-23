@@ -13,12 +13,12 @@ steps:
         - ${DRONE_COMMIT}
 
 
-  # - name: deploy_staging
-  #   image: ktruckenmiller/ansible
-  #   environment:
-  #     AWS_DEFAULT_REGION: us-west-2
-  #   commands:
-  #    - ansible-playbook -i ansible_connection=localhost deployment/deploy.yml -e GIT_COMMIT=${DRONE_COMMIT} -e environ=staging -vvv
+  - name: deploy_staging
+    image: ktruckenmiller/ansible
+    environment:
+      AWS_DEFAULT_REGION: us-east-2
+    commands:
+     - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-east-2 -e version=${DRONE_COMMIT} -e environ=staging -vvv
 
 trigger:
   branch: master

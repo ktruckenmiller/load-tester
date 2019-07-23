@@ -9,14 +9,27 @@
         stack_name: "{{name}}-ecs"
         state: present
         region: "{{region}}"
-        template: "service.yml"
+        template: "templates/task.yml"
         template_parameters:
           ServiceName: "{{ name }}"
-          HostedZone: "{{hosted_zone}}"
           Environment: "{{environ}}"
-          Priority: "17"
-          Vpc: "{{vpc}}"
-          CertId: 89eb20e3-7dad-489a-ad1a-619cae4a2c29
-          Version: latest
-          Subnets: subnet-0c00ee77,subnet-a6954dcf,subnet-d65b579c
-          ClusterName: "{{environ}}-{{name}}"
+          Version: "{{version}}"
+          ClusterName: "default"
+      register: ecs_task
+
+    - debug: var=ecs_task
+    # - name: RUN a task on Fargate
+    #   ecs_task:
+    #       operation: run
+    #       cluster: console-sample-app-static-cluster
+    #       task_definition: console-sample-app-static-taskdef
+    #       task: "arn:aws:ecs:us-west-2:172139249013:task/3f8353d1-29a8-4689-bbf6-ad79937ffe8a"
+    #       started_by: kevinisthebest
+    #       launch_type: FARGATE
+    #       network_configuration:
+    #         subnets:
+    #         - subnet-abcd1234
+    #         security_groups:
+    #         - sg-aaaa1111
+    #         - my_security_group
+    #   register: task_output
