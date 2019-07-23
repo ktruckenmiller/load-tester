@@ -6,7 +6,12 @@ Parameters:
   Environment:
     Type: String
   ClusterName:
-    Type: String 
+    Type: String
+
+Outputs:
+  TaskFargate:
+    Value: !Ref TaskFargate
+    Description: task
 
 Resources:
 
