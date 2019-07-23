@@ -5,6 +5,8 @@ Parameters:
     Type: String
   Environment:
     Type: String
+  ClusterName:
+    Type: String 
 
 Resources:
 
