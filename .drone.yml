@@ -5,4 +5,9 @@ name: build-cluster-deployer
 steps:
   - name: test_deployer
     image: python:alpine
-    
+    commands:
+      - echo "hi"
+
+
+node:
+  instance: truckstop
