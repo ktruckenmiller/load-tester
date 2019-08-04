@@ -1,0 +1,8 @@
+---
+kind: pipeline
+name: build-cluster-deployer
+
+steps:
+  - name: test_deployer
+    image: python:alpine
+    
