@@ -1,13 +1,28 @@
 ---
 kind: pipeline
-name: build-cluster-deployer
+name: build-load-tester
 
 steps:
-  - name: test_deployer
-    image: python:alpine
-    commands:
-      - echo "hi"
+  - name: build_docker
+    image: plugins/ecr
+    settings:
+      repo: 601394826940.dkr.ecr.us-east-2.amazonaws.com/load-tester
+      region: us-east-2
+      tags:
+        - latest
+        - ${DRONE_COMMIT}
 
+
+  - name: deploy_staging
+    image: ktruckenmiller/ansible
+    environment:
+      AWS_DEFAULT_REGION: us-east-2
+    commands:
+     - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-east-2 -e version=${DRONE_COMMIT} -e environ=staging -vvv
+
+trigger:
+  branch: master
+  event: push
 
 node:
   instance: truckstop

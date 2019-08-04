@@ -1,0 +1,48 @@
+Parameters:
+  ServiceName:
+    Type: String
+  Version:
+    Type: String
+  Environment:
+    Type: String
+  ClusterName:
+    Type: String
+
+Outputs:
+  TaskFargate:
+    Value: !Ref TaskFargate
+    Description: task
+
+Resources:
+
+  LogsFargate:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: !Sub ${ServiceName}-${Environment}-fargate
+      RetentionInDays: 7
+
+  TaskFargate:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      # TaskRoleArn:
+      #   Fn::ImportValue: !Sub loadtester-${Environment}-long-lived:TaskRole
+      Memory: 512
+      Cpu: 256
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !Sub arn:aws:iam::${AWS::AccountId}:role/ECSTaskExecution
+      ContainerDefinitions:
+        - Name: !Sub ${ServiceName}
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/load-tester:${Version}
+          # Environment:
+          #   - Name: ENVIRON
+          #     Value: !Sub ${Environment}
+          #   - Name: AWS_REGION
+          #     Value: !Sub ${AWS::Region}
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Sub ${ServiceName}-${Environment}-fargate
+              awslogs-region: !Sub ${AWS::Region}
+              awslogs-stream-prefix: !Sub ${ServiceName}
