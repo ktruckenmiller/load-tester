@@ -5,6 +5,8 @@ name: build-load-tester
 steps:
   - name: build_docker
     image: plugins/ecr
+    environment:
+      - IAM_ROLE=arn:aws:iam::601394826940:role/cloudformation
     settings:
       repo: 601394826940.dkr.ecr.us-east-2.amazonaws.com/load-tester
       region: us-east-2
