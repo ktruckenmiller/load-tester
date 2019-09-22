@@ -22,7 +22,7 @@ steps:
     environment:
       AWS_DEFAULT_REGION: us-west-2
     commands:
-     - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-west-2 -e version=${DRONE_COMMIT} -e environ=staging -vvv
+     - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-west-2 -e version=0.0.3 -e environ=staging -vvv
     when:
       branch: master
       event: push

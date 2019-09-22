@@ -20,15 +20,45 @@ Resources:
     Properties:
       LogGroupName: !Sub ${ServiceName}-${Environment}-fargate
       RetentionInDays: 7
-
+  Role:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "ecs-tasks.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+          - Effect: "Allow"
+            Principal:
+              AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+            Action: "sts:AssumeRole"
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: true
+      Path: '/'
+      Policies:
+        - PolicyName: bucket-policy
+          PolicyDocument:
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - s3:Put*
+                  - s3:List*
+                  - s3:Get*
+                Resource:
+                  - !Sub arn:aws:s3:::kloudcover
+                  - !Sub arn:aws:s3:::kloudcover/*
   TaskFargate:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: test-load
       RequiresCompatibilities:
         - FARGATE
-      # TaskRoleArn:
-      #   Fn::ImportValue: !Sub loadtester-${Environment}-long-lived:TaskRole
+      TaskRoleArn: !GetAtt Role.Arn
       Memory: 512
       Cpu: 256
       NetworkMode: awsvpc
@@ -36,11 +66,6 @@ Resources:
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}
           Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/load-tester:${Version}
-          # Environment:
-          #   - Name: ENVIRON
-          #     Value: !Sub ${Environment}
-          #   - Name: AWS_REGION
-          #     Value: !Sub ${AWS::Region}
           LogConfiguration:
             LogDriver: awslogs
             Options:
