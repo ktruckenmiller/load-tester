@@ -43,10 +43,11 @@
         task_definition: "test-load"
         started_by: kevinisthebest
         count: 1
-        containerOverrides:
-          environment:
-            - name: S3_LOCATION
-              value: s3://kloudcover/tools/application-profiling/test.yml
+        overrides:
+          containerOverrides:
+            environment:
+              - name: S3_LOCATION
+                value: s3://kloudcover/tools/application-profiling/test.yml
         launch_type: FARGATE
         region: "{{region}}"
         network_configuration:
