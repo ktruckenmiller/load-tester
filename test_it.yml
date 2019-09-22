@@ -45,7 +45,7 @@
         count: 1
         overrides:
           containerOverrides:
-            environment:
+            - environment:
               - name: S3_LOCATION
                 value: s3://kloudcover/tools/application-profiling/test.yml
         launch_type: FARGATE
