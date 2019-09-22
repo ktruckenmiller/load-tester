@@ -43,7 +43,7 @@
         task_definition: "test-load"
         started_by: kevinisthebest
         count: 1
-        overrides:
+        containerOverrides:
           environment:
             - name: S3_LOCATION
               value: s3://kloudcover/tools/application-profiling/test.yml
