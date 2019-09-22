@@ -48,6 +48,7 @@
             - environment:
               - name: S3_LOCATION
                 value: s3://kloudcover/tools/application-profiling/test.yml
+          name: "{{ name }}"
         launch_type: FARGATE
         region: "{{region}}"
         network_configuration:
