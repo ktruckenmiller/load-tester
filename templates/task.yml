@@ -24,6 +24,7 @@ Resources:
   TaskFargate:
     Type: AWS::ECS::TaskDefinition
     Properties:
+      Family: test-load
       RequiresCompatibilities:
         - FARGATE
       # TaskRoleArn:
