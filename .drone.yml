@@ -5,11 +5,11 @@ name: build-load-tester
 steps:
   - name: build_docker
     image: plugins/ecr
-    environment:
-      IAM_ROLE: arn:aws:iam::601394826940:role/cloudformation
+    # environment:
+    #   IAM_ROLE: arn:aws:iam::601394826940:role/cloudformation
     settings:
-      repo: 601394826940.dkr.ecr.us-east-2.amazonaws.com/load-tester
-      region: us-east-2
+      repo: 601394826940.dkr.ecr.us-west-2.amazonaws.com/load-tester
+      region: us-west-2
       tags:
         - latest
         - ${DRONE_COMMIT}
@@ -18,13 +18,13 @@ steps:
   - name: deploy_staging
     image: ktruckenmiller/ansible
     environment:
-      AWS_DEFAULT_REGION: us-east-2
+      AWS_DEFAULT_REGION: us-west-2
     commands:
-     - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-east-2 -e version=${DRONE_COMMIT} -e environ=staging -vvv
+     - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-west-2 -e version=${DRONE_COMMIT} -e environ=staging -vvv
 
 trigger:
   branch: master
   event: push
-
-node:
-  instance: truckstop
+#
+# node:
+#   instance: truckstop
