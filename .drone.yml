@@ -25,9 +25,8 @@ steps:
      - ansible-playbook -i ansible_connection=localhost test_it.yml -e region=us-west-2 -e version=${DRONE_COMMIT} -e environ=staging -vvv
     when:
       branch: master
+      event: push
 
-trigger:
-  event: push
 #
 # node:
 #   instance: truckstop
