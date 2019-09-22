@@ -4,6 +4,17 @@
   vars:
     name: test-ecs-cluster
     clustername: default
+    network_config:
+      us-west-2:
+        security_groups:
+          - sg-899fb7ee
+        subnets:
+          - subnet-9b2938c2
+      us-east-2:
+        subnets:
+          - subnet-0c00ee77
+        security_groups:
+          - sg-eaff2583
   tasks:
     - name: cloudformation
       cloudformation:
@@ -18,7 +29,13 @@
           ClusterName: "{{clustername}}"
       register: ecs_task
 
-    - debug: var=ecs_task
+    - name: Simple PUT operation
+      aws_s3:
+        bucket: kloudcover
+        object: tools/application-profiling/test.yml
+        src: test.yml
+        mode: put
+
     - name: RUN a task on Fargate
       ecs_task:
         operation: run
@@ -26,11 +43,15 @@
         task_definition: "test-load"
         started_by: kevinisthebest
         count: 1
+        overrides:
+          environment:
+            - name: S3_LOCATION
+              value: s3://kloudcover/tools/application-profiling/test.yml
         launch_type: FARGATE
         region: "{{region}}"
         network_configuration:
           subnets:
-          - subnet-0c00ee77
+          - "{{ network_config[region]['subnets'][0] }}"
           security_groups:
-          - sg-eaff2583
+          - "{{ network_config[region]['security_groups'][0] }}"
       register: task_output

@@ -2,7 +2,7 @@
 execution:
 - concurrency: 10
   ramp-up: 1m
-  hold-for: 10m30s
+  hold-for: 1m30s
   scenario: simple
 
 scenarios:
