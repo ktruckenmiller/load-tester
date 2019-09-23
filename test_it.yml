@@ -6,15 +6,10 @@
     clustername: default
     network_config:
       us-west-2:
-        security_groups:
-          - sg-899fb7ee
-        subnets:
-          - subnet-9b2938c2
+        subnet: subnet-9b2938c2
+        vpc_id: vpc-849531e0
       us-east-2:
-        subnets:
-          - subnet-0c00ee77
-        security_groups:
-          - sg-eaff2583
+        subnet: subnet-0c00ee77
   tasks:
     - name: cloudformation
       cloudformation:
@@ -27,8 +22,11 @@
           Environment: "{{environ}}"
           Version: "{{version}}"
           ClusterName: "{{clustername}}"
+          VpcId: "{{ network_config[region]['vpc_id'] }}"
       register: ecs_task
 
+    - name: debug
+      debug: var=ecs_task
     - name: Simple PUT operation
       aws_s3:
         bucket: kloudcover
@@ -36,25 +34,14 @@
         src: test.yml
         mode: put
 
-    - name: RUN a task on Fargate
-      ecs_task:
-        operation: run
-        cluster: "{{clustername}}"
-        task_definition: "test-load"
-        started_by: kevinisthebest
-        count: 1
-        overrides:
-          containerOverrides:
-            - name: "{{ name }}"
-              environment:
-                - name: S3_LOCATION
-                  value: s3://kloudcover/tools/application-profiling/test.yml
-
-        launch_type: FARGATE
-        region: "{{region}}"
-        network_configuration:
-          subnets:
-          - "{{ network_config[region]['subnets'][0] }}"
-          security_groups:
-          - "{{ network_config[region]['security_groups'][0] }}"
-      register: task_output
+    - name: run task
+      command: "aws ecs run-task \
+                --cluster=default \
+                --task-definition test-load \
+                --network-configuration='{\"awsvpcConfiguration\": {\"subnets\":[\"{{network_config[region]['subnet']}}\"],\"securityGroups\":[\"{{ecs_task.stack_outputs.Sg}}\"],\"assignPublicIp\": \"ENABLED\"}}' \
+                --launch-type=FARGATE \
+                --started-by=kevinisthebest \
+                --count=1 \
+                --overrides='{\"containerOverrides\": [{\"name\": \"{{ name }}\", \"environment\": [{\"name\": \"S3_LOCATION\", \"value\": \"s3://kloudcover/tools/application-profiling/test.yml\"}]}]}' \
+                --region \"{{region}}\""
+      register: task_res

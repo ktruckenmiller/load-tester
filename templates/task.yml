@@ -7,13 +7,22 @@ Parameters:
     Type: String
   ClusterName:
     Type: String
+  VpcId:
+    Type: String
 
 Outputs:
   TaskFargate:
     Value: !Ref TaskFargate
     Description: task
-
+  Sg:
+    Value: !Ref SecurityGroup
+    
 Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: load tester sg
+      VpcId: !Ref VpcId
 
   LogsFargate:
     Type: "AWS::Logs::LogGroup"
