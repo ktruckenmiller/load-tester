@@ -10,6 +10,7 @@
         vpc_id: vpc-849531e0
       us-east-2:
         subnet: subnet-0c00ee77
+        vpc_id: vpc-9aab64f3
   tasks:
     - name: cloudformation
       cloudformation:

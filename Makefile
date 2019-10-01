@@ -14,7 +14,7 @@ deploy:
 	-e IAM_ROLE \
 	ktruckenmiller/ansible \
 		ansible-playbook -i ansible_connection=localhost test_it.yml \
-		-e region=us-west-2 \
+		-e region=us-east-2 \
 		-e version=0.0.3 \
 		-e environ=staging -vvv
 
