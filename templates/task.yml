@@ -9,6 +9,8 @@ Parameters:
     Type: String
   VpcId:
     Type: String
+  Subdomain:
+    Type: String
 
 Outputs:
   TaskFargate:
@@ -16,7 +18,7 @@ Outputs:
     Description: task
   Sg:
     Value: !Ref SecurityGroup
-    
+
 Resources:
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup

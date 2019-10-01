@@ -15,7 +15,7 @@ deploy:
 	ktruckenmiller/ansible \
 		ansible-playbook -i ansible_connection=localhost test_it.yml \
 		-e region=us-east-2 \
-		-e version=0.0.3 \
+		-e version=0.0.4 \
 		-e environ=staging -vvv
 
 build:

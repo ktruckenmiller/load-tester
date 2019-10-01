@@ -10,7 +10,7 @@ scenarios:
     think-time: 0.75
     requests:
     # - https://jamf.clustermaestro.com
-    - http://my-ip.clustermaestro.com
+    - http://jamf.clustermaestro.com
 reporting:
   - module: blazemeter
 

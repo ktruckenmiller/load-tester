@@ -4,6 +4,7 @@
   vars:
     name: test-ecs-cluster
     clustername: default
+    sub_domain: jamf
     network_config:
       us-west-2:
         subnet: subnet-9b2938c2
@@ -24,6 +25,7 @@
           Version: "{{version}}"
           ClusterName: "{{clustername}}"
           VpcId: "{{ network_config[region]['vpc_id'] }}"
+          Subdomain: "{{sub_domain}}"
       register: ecs_task
 
     - name: debug
